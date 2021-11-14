@@ -10,22 +10,10 @@
 </html>
 
 <script>    
-    let scene, camera, renderer, light1, controls,cube, smallcube, lightHelper, rayCast;
+    let scene, camera, renderer, light1, controls, cube, smallcube, lightHelper, rayCast;
     let ADD = 0.05;
-    let fish, 
-    bodyFish, 
-    tailFish,
-    topFish,
-    rightIris, 
-    leftIris, 
-    rightEye, 
-    leftEye, 
-    lipsFish, 
-    tooth1, 
-    tooth2, 
-    tooth3, 
-    tooth4, 
-    tooth5;
+    let bait1;
+    let fish, bodyFish, tailFish,topFish,rightIris, leftIris, rightEye, leftEye, lipsFish, tooth1, tooth2, tooth3, tooth4, tooth5;
     let halfPI = Math.PI/2;
     let loader = new THREE.TextureLoader();
     
@@ -201,6 +189,42 @@
         circle.rotation.x += 1.5;
         scene.add(circle);
     }
+
+    let createBait1 = function() {
+        let material = new THREE.MeshBasicMaterial({color: 'black', wireframe: true});
+        let geometry = new THREE.SphereGeometry(1,10,10);
+        bait1 = new THREE.Mesh(geometry, material);
+        scene.add(bait1);
+    }
+
+    let createBait2 = function() {
+        let material = new THREE.MeshLambertMaterial({
+            color: 'red',
+            shading: THREE.FlatShading
+        })
+        let geometry = new THREE.SphereGeometry(1,10,10);
+        bait2 = new THREE.Mesh(geometry, material);
+        scene.add(bait2);
+    }
+
+    let onKeyDown = function(e) {
+        let xSpeed = 0.1;
+        let ySpeed = 0.1;
+        if (e.keyCode == 87) {
+            bait1.position.z -= ySpeed;
+        } else if (e.keyCode == 83) {
+            bait1.position.z += ySpeed;
+        } else if (e.keyCode == 65) {
+            bait1.position.x -= xSpeed;
+        } else if (e.keyCode == 68) {
+            bait1.position.x += xSpeed;
+        } else if (e.keyCode == 32) {
+            createBait2();
+            bait2.position.z = bait1.position.z;
+            bait2.position.x = bait1.position.x;
+            scene.remove(bait1);
+        }
+    };
     
     // set up the environment - 
     // initiallize scene, camera, objects and renderer
@@ -221,7 +245,6 @@
         camera = new THREE.PerspectiveCamera(75, 
                         window.innerWidth / window.innerHeight, 
                         1, 1000);
-    
         
         camera.position.set(15, 10, 15);
 
@@ -238,6 +261,7 @@
         
         createFish();
         createPool();
+        createBait1();
         circle.position.y = -1;
         fish.scale.set(0.02,0.02,0.02);
         fish.rotation.y = 0;
@@ -251,11 +275,11 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         
         document.body.appendChild(renderer.domElement);
+        document.addEventListener("keydown", onKeyDown, false);
 
         // controls
 
         controls = new THREE.OrbitControls( camera, renderer.domElement );
-        controls.listenToKeyEvents( window ); // optional
 
         controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
         controls.dampingFactor = 0.01;
