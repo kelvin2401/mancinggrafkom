@@ -179,6 +179,241 @@
         scene.add(fish);
     }
 
+    let createFish3 = function() {
+        // A group that will contain each part of the fish
+        fish3 = new THREE.Group();
+        // each part needs a geometry, a material, and a mesh
+        
+        // Body 
+        let bodyGeom = new THREE.BoxGeometry(120, 120, 120);
+            let bodyMat = new THREE.MeshLambertMaterial({
+            color: 0xff8000 ,
+            shading: THREE.FlatShading
+        });
+        bodyFish = new THREE.Mesh(bodyGeom, bodyMat);
+        
+        // Tail
+        let tailGeom = new THREE.PlaneGeometry(30,30);
+            let tailMat = new THREE.MeshLambertMaterial({
+            color: 0xadd8e6,
+            shading: THREE.FlatShading,
+            side: THREE.DoubleSide
+        });
+        
+        let mouthGeom = new THREE.BoxGeometry(20, 20, 20);
+        let mouthMat = new THREE.MeshLambertMaterial({
+            color: 0x48240a ,
+            shading: THREE.FlatShading
+        });
+        mouthFish = new THREE.Mesh(mouthGeom, mouthMat);
+        mouthFish.position.x = 60;
+        mouthFish.position.y = -20;
+        mouthFish.position.z = 0;
+        
+        // Fins
+        
+        sideRightFish = new THREE.Mesh(tailGeom, tailMat);
+        sideRightFish.rotation.x = halfPI/2;
+        sideRightFish.rotation.z = -halfPI;
+        sideRightFish.position.x = 0; 
+        sideRightFish.position.y = 50; 
+        sideRightFish.position.z = 80; 
+        
+        sideLeftFish = new THREE.Mesh(tailGeom, tailMat);
+        sideLeftFish.rotation.x = -halfPI/2;
+        sideLeftFish.rotation.z = -halfPI;
+        sideLeftFish.position.x = 0; 
+        sideLeftFish.position.y = 50; 
+        sideLeftFish.position.z = -100; 
+        
+        // Eyes
+        let eyeGeom = new THREE.BoxGeometry(40, 40,5);
+        let eyeMat = new THREE.MeshLambertMaterial({
+            color: 0xffffff,
+            shading: THREE.FlatShading
+        });
+        
+        let irisGeom = new THREE.BoxGeometry(20, 20,20);
+        let irisMat = new THREE.MeshLambertMaterial({
+            color: 0x000000,
+            shading: THREE.FlatShading
+        });
+        
+        rightIris = new THREE.Mesh(irisGeom,irisMat );
+        rightIris.position.z = -40;
+        rightIris.position.x = 60;
+        rightIris.position.y = 25;
+        
+        leftIris = new THREE.Mesh(irisGeom,irisMat );
+        leftIris.position.z = 40;
+        leftIris.position.x = 60;
+        leftIris.position.y = 25;
+            
+        let toothGeom = new THREE.BoxGeometry(20, 4, 20);
+        let toothMat = new THREE.MeshLambertMaterial({
+            color: 0xffffff,
+            shading: THREE.FlatShading
+        });
+        
+        // Teeth
+        tooth1 = new THREE.Mesh(toothGeom,toothMat);
+        tooth1.position.x = 65;
+        tooth1.position.y = -35;
+        tooth1.position.z = -50;
+        tooth1.rotation.z = halfPI;
+        tooth1.rotation.x = -halfPI;
+        
+        tooth2 = new THREE.Mesh(toothGeom,toothMat);
+        tooth2.position.x = 65;
+        tooth2.position.y = -30;
+        tooth2.position.z = -25;
+        tooth2.rotation.z = halfPI;
+        tooth2.rotation.x = -Math.PI/12;
+        
+        tooth3 = new THREE.Mesh(toothGeom,toothMat);
+        tooth3.position.x = 65;
+        tooth3.position.y = -25;
+        tooth3.position.z = 0;
+        tooth3.rotation.z = halfPI;
+        
+        tooth4 = new THREE.Mesh(toothGeom,toothMat);
+        tooth4.position.x = 65;
+        tooth4.position.y = -30;
+        tooth4.position.z = 25;
+        tooth4.rotation.z = halfPI;
+        tooth4.rotation.x = Math.PI/12;
+        
+        tooth5 = new THREE.Mesh(toothGeom,toothMat);
+        tooth5.position.x = 65;
+        tooth5.position.y = -35;
+        tooth5.position.z = 50;
+        tooth5.rotation.z = halfPI;
+        tooth5.rotation.x = Math.PI/8;
+
+        fish3.add(bodyFish);
+        fish3.add(sideRightFish);
+        fish3.add(sideLeftFish);
+        fish3.add(rightIris);
+        fish3.add(leftIris);
+        fish3.add(mouthFish);
+        
+        fish3.rotation.y = -Math.PI/4;
+        scene.add(fish3);
+    }
+
+    let createFish2 = function() {
+        // A group that will contain each part of the fish
+        fish2 = new THREE.Group();
+        // each part needs a geometry, a material, and a mesh
+
+        // Head
+        let headGeom = new THREE.BoxGeometry(70, 100, 80);
+            let headMat = new THREE.MeshLambertMaterial({
+            color: 0x004c00 ,
+            shading: THREE.FlatShading
+        });
+        headFish = new THREE.Mesh(headGeom, headMat);
+        headFish.position.x = 280;
+        headFish.position.y = 10;
+        
+        // Body 
+        let bodyGeom = new THREE.BoxGeometry(500, 120, 80);
+            let bodyMat = new THREE.MeshLambertMaterial({
+            color: 0x990000 ,
+            shading: THREE.FlatShading
+        });
+        bodyFish = new THREE.Mesh(bodyGeom, bodyMat);
+        
+        // Tail
+        let tailGeom = new THREE.CylinderGeometry(0, 60, 60, 4, false);
+            let tailMat = new THREE.MeshLambertMaterial({
+            color: 0xff00dc,
+            shading: THREE.FlatShading,
+            side: THREE.DoubleSide
+        });
+        
+        tailFish = new THREE.Mesh(tailGeom, tailMat);
+        tailFish.scale.set(.8,1,.1);
+        tailFish.position.x = -60; 
+        tailFish.rotation.z = -halfPI;
+        
+        // Lips
+        let lipsGeom = new THREE.BoxGeometry(25, 10, 120);
+        let lipsMat = new THREE.MeshLambertMaterial({
+            color: 0x80f5fe ,
+            shading: THREE.FlatShading
+        });
+        lipsFish = new THREE.Mesh(lipsGeom, lipsMat);
+        lipsFish.position.x = 65;
+        lipsFish.position.y = -47;
+        lipsFish.rotation.z = halfPI;
+        
+        // Fins
+        topFish = new THREE.Mesh(tailGeom, tailMat);
+        topFish.scale.set(.8,1,.1);
+        topFish.position.x = -20; 
+        topFish.position.y = 60; 
+        topFish.rotation.z = -halfPI;
+        
+        sideRightFish = new THREE.Mesh(tailGeom, tailMat);
+        sideRightFish.scale.set(.8,1,.1);
+        sideRightFish.rotation.x = halfPI;
+        sideRightFish.rotation.z = -halfPI;
+        sideRightFish.position.x = 0; 
+        sideRightFish.position.y = -50; 
+        sideRightFish.position.z = -60; 
+        
+        sideLeftFish = new THREE.Mesh(tailGeom, tailMat);
+        sideLeftFish.scale.set(.8,1,.1);
+        sideLeftFish.rotation.x = halfPI;
+        sideLeftFish.rotation.z = -halfPI;
+        sideLeftFish.position.x = 0; 
+        sideLeftFish.position.y = -50; 
+        sideLeftFish.position.z = 60; 
+        
+        // Eyes
+        let eyeGeom = new THREE.BoxGeometry(40, 40,5);
+        let eyeMat = new THREE.MeshLambertMaterial({
+            color: 0xffffff,
+            shading: THREE.FlatShading
+        });
+        
+        let irisGeom = new THREE.BoxGeometry(25, 25,3);
+        let irisMat = new THREE.MeshLambertMaterial({
+            color: 0x330000,
+            shading: THREE.FlatShading
+        });
+        
+        rightIris = new THREE.Mesh(irisGeom,irisMat );
+        rightIris.position.z = -45;
+        rightIris.position.x = 280;
+        rightIris.position.y = 25;
+        
+        leftIris = new THREE.Mesh(irisGeom,irisMat );
+        leftIris.position.z = 40;
+        leftIris.position.x = 280;
+        leftIris.position.y = 25;
+            
+        let toothGeom = new THREE.BoxGeometry(20, 4, 20);
+        let toothMat = new THREE.MeshLambertMaterial({
+            color: 0xffffff,
+            shading: THREE.FlatShading
+        });
+        
+        fish2.add(headFish);
+        fish2.add(bodyFish);
+        fish2.add(tailFish);
+        fish2.add(topFish);
+        fish2.add(sideRightFish);
+        fish2.add(sideLeftFish);
+        fish2.add(rightIris);
+        fish2.add(leftIris);
+        fish2.add(lipsFish);
+        
+        fish2.rotation.y = -Math.PI/4;
+        scene.add(fish2);
+    }
+
     let createPool = function() {
         let material = new THREE.MeshBasicMaterial({color: 006994, side: THREE.DoubleSide});
         let geometry = new THREE.CircleGeometry(1000,24);
@@ -236,7 +471,7 @@
     let init = function() {
         // create the scene
         scene = new THREE.Scene();
-        {
+        {   
             let color = 0xFFFFFF;
             scene.fog = new THREE.Fog(color, 10, 100);
         }
@@ -266,11 +501,19 @@
         scene.add(light1);
         
         createFish();
+        createFish2();
+        createFish3();
         createPool();
         createBait1();
         circle.position.y = -1;
         fish.scale.set(0.02,0.02,0.02);
         fish.rotation.y = 0;
+        fish2.scale.set(0.02,0.02,0.02);
+        fish2.position.x = -10;
+        fish2.rotation.y = 0;
+        fish3.scale.set(0.02,0.02,0.02);
+        fish3.position.x = -20;
+        fish3.rotation.y = 0;
 
         rayCast = new THREE.Raycaster();
         mouse = new THREE.Vector2();
@@ -289,13 +532,27 @@
     let mainLoop = function() {
         if (fish.position.x > 30) direction = 0;
         if (fish.position.x < -30) direction = 1;
+        if (fish2.position.x > 30) direction = 0;
+        if (fish2.position.x < -30) direction = 1;
+        if (fish3.position.x > 30) direction = 0;
+        if (fish3.position.x < -30) direction = 1;
         if (direction == 1 && collision == 0){
             fish.position.x += 0.1;
             fish.rotation.y = 0;
+            
+            fish2.position.x += 0.1;
+            fish2.rotation.y = 0;
+            
+            fish3.position.x += 0.1;
+            fish3.rotation.y = 0;
         } 
         else if (direction == 0 && collision == 0){
             fish.position.x -= 0.1;
             fish.rotation.y = 3.14;
+            fish2.position.x -= 0.1;
+            fish2.rotation.y = 3.14;
+            fish3.position.x -= 0.1;
+            fish3.rotation.y = 3.14;
         } 
         if (cast == 1){
             if (fish.position.x < bait2.position.x + 2 && fish.position.x > bait.position.x - 2 && fish.position.y < 
