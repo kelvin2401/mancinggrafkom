@@ -13,6 +13,9 @@
     let bait1, bait2, cast = 0, collision = 0;
     let fish, bodyFish, tailFish,topFish,rightIris, leftIris, rightEye, leftEye, lipsFish, tooth1, tooth2, tooth3, tooth4, tooth5;
     let halfPI = Math.PI/2;
+    let lookDir = new THREE.Vector3(0, 0, 0.1);
+    let newDir = new THREE.Vector3(Math.random(), 0, Math.random());
+    let pos = new THREE.Vector3();
     let loader = new THREE.TextureLoader();
     
     let onMouseClick = function(e) {
@@ -176,6 +179,7 @@
         fish.add(lipsFish);
         
         fish.rotation.y = -Math.PI/4;
+        fish.rotation.z = 4;
         scene.add(fish);
     }
 
@@ -519,6 +523,9 @@
         mouse = new THREE.Vector2();
         mouse.x = mouse.y = -1;
 
+        pos.addVectors(lookDir, fish.position);
+        fish.lookAt(pos);
+
         // create the renderer   
         renderer = new THREE.WebGLRenderer();   
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -526,31 +533,74 @@
         document.body.appendChild(renderer.domElement);
         document.addEventListener("keydown", onKeyDown, false);
     };
-    let direction = 1;
+    let directionx = 1;
+    let directiony = 1;
+    let direction2 = 1;
+    let direction3 = 1;
+    let look = 0;
+    let look2 = 0;
+    let randomx = 1;
+    let randomz = 0;
+    //newDir = new THREE.Vector3((Math.random()*2-1)*0.3, 0, (Math.random()*2-1)*0.3);
+
     
     // main animation loop - calls 50-60 times per second.
     let mainLoop = function() {
-        if (fish.position.x > 30) direction = 0;
-        if (fish.position.x < -30) direction = 1;
-        if (fish2.position.x > 30) direction = 0;
-        if (fish2.position.x < -30) direction = 1;
-        if (fish3.position.x > 30) direction = 0;
-        if (fish3.position.x < -30) direction = 1;
-        if (direction == 1 && collision == 0){
-            fish.position.x += 0.1;
-            fish.rotation.y = 0;
-            
+        if (fish.position.x > 30) directionx = 0;
+        if (fish.position.x < -30) directionx = 1;
+        if (fish.position.z > 10) directiony = 0;
+        if (fish.position.z < -10) directiony =1;
+        if (fish2.position.x > 30) direction2 = 0;
+        if (fish2.position.x < -30) direction2 = 1;
+        if (fish3.position.x > 30) direction3 = 0;
+        if (fish3.position.x < -30) direction3 = 1;
+
+        if (directionx == 1 && look == 0){
+            pos.addVectors(lookDir, fish.position);
+            fish.lookAt(pos);
+            look = 1;
+            randomz = (Math.random()-0.5)*0.3;
+            newDir = new THREE.Vector3(Math.random()*0.3, 0, randomz);
+            if(randomz < 0) look2 = 0;
+            else look2 = 1;
+        }
+        if (directionx == 0 && look == 1){
+            randomz = (Math.random()-0.5)*0.3;
+            newDir = new THREE.Vector3(Math.random()*(-0.3), 0, randomz);
+            look = 0;
+            if(randomz < 0) look2 = 0;
+            else look2 = 1;
+        }
+        if (directiony == 1 && look2 == 0){
+            randomx = (Math.random()-0.5)*0.3;
+            newDir = new THREE.Vector3(randomx, 0, Math.random()*(0.3));
+            look2 = 1;
+            if(randomx < 0) look = 0;
+            else look = 1;
+        }
+        if (directiony == 0 && look2 == 1){
+            randomx = (Math.random()-0.5)*0.3;
+            newDir = new THREE.Vector3(randomx, 0, Math.random()*(-0.3));
+            look2 = 0;
+            if(randomx < 0) look = 0;
+            else look = 1;
+        }
+        if (collision == 0){
+            fish.position.add(newDir);
+        } 
+        if (direction2 == 1 && collision == 0){
             fish2.position.x += 0.1;
             fish2.rotation.y = 0;
-            
+        } 
+        else if (direction2 == 0 && collision == 0){
+            fish2.position.x -= 0.1;
+            fish2.rotation.y = 3.14;
+        } 
+        if (direction3 == 1 && collision == 0){
             fish3.position.x += 0.1;
             fish3.rotation.y = 0;
         } 
-        else if (direction == 0 && collision == 0){
-            fish.position.x -= 0.1;
-            fish.rotation.y = 3.14;
-            fish2.position.x -= 0.1;
-            fish2.rotation.y = 3.14;
+        else if (direction3 == 0 && collision == 0){
             fish3.position.x -= 0.1;
             fish3.rotation.y = 3.14;
         } 
