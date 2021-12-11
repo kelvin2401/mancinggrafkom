@@ -1,22 +1,36 @@
 <html>
     <head>
         <title>fishing</title>
-        <script src = "js/three.min.js"></script>     
+        <script src = "js/three.min.js"></script> 
+        <script src="js/THREEx.KeyboardState.js"></script>    
     </head>
     <body>
+        <div style="position:relative">
+            <img src=controls.png
+               style="position:absolute; top: 775px; left:30px; width:250px; height:80px; border:none;" />
+        </div>
     </body> 
 </html>
 
 <script>    
-    let scene, camera, renderer, light1, cube, smallcube, lightHelper, rayCast;
+    let scene, camera, renderer, light1, cube, smallcube, lightHelper, rayCast, score = 0;
     let ADD = 0.05;
-    let bait1, bait2, cast = 0, collision = 0;
+    let bait1, bait2, cast = 0, collision = 0, collision2 = 0, collision3 = 0;
     let fish, bodyFish, tailFish,topFish,rightIris, leftIris, rightEye, leftEye, lipsFish, tooth1, tooth2, tooth3, tooth4, tooth5;
     let halfPI = Math.PI/2;
-    let lookDir = new THREE.Vector3(0, 0, 0.1);
-    let newDir = new THREE.Vector3(Math.random(), 0, Math.random());
+    let newDir = new THREE.Vector3(0, 0, 0);
     let pos = new THREE.Vector3();
+    let newDir2 = new THREE.Vector3(0, 0, 0);
+    let pos2 = new THREE.Vector3();
+    let newDir3 = new THREE.Vector3(0, 0, 0);
+    let pos3 = new THREE.Vector3();
     let loader = new THREE.TextureLoader();
+    var keyboard = new THREEx.KeyboardState();
+    var clock = new THREE.Clock();
+
+    let getRandom = function(min, max){
+        return Math.random() * (max-min) + min;
+    }
     
     let onMouseClick = function(e) {
         mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -206,11 +220,11 @@
         
         let mouthGeom = new THREE.BoxGeometry(20, 20, 20);
         let mouthMat = new THREE.MeshLambertMaterial({
-            color: 0x48240a ,
+            color: 0x2e1d01 ,
             shading: THREE.FlatShading
         });
         mouthFish = new THREE.Mesh(mouthGeom, mouthMat);
-        mouthFish.position.x = 60;
+        mouthFish.position.x = 55;
         mouthFish.position.y = -20;
         mouthFish.position.z = 0;
         
@@ -228,7 +242,7 @@
         sideLeftFish.rotation.z = -halfPI;
         sideLeftFish.position.x = 0; 
         sideLeftFish.position.y = 50; 
-        sideLeftFish.position.z = -100; 
+        sideLeftFish.position.z = -80; 
         
         // Eyes
         let eyeGeom = new THREE.BoxGeometry(40, 40,5);
@@ -245,12 +259,12 @@
         
         rightIris = new THREE.Mesh(irisGeom,irisMat );
         rightIris.position.z = -40;
-        rightIris.position.x = 60;
+        rightIris.position.x = 55;
         rightIris.position.y = 25;
         
         leftIris = new THREE.Mesh(irisGeom,irisMat );
         leftIris.position.z = 40;
-        leftIris.position.x = 60;
+        leftIris.position.x = 55;
         leftIris.position.y = 25;
             
         let toothGeom = new THREE.BoxGeometry(20, 4, 20);
@@ -258,42 +272,6 @@
             color: 0xffffff,
             shading: THREE.FlatShading
         });
-        
-        // Teeth
-        tooth1 = new THREE.Mesh(toothGeom,toothMat);
-        tooth1.position.x = 65;
-        tooth1.position.y = -35;
-        tooth1.position.z = -50;
-        tooth1.rotation.z = halfPI;
-        tooth1.rotation.x = -halfPI;
-        
-        tooth2 = new THREE.Mesh(toothGeom,toothMat);
-        tooth2.position.x = 65;
-        tooth2.position.y = -30;
-        tooth2.position.z = -25;
-        tooth2.rotation.z = halfPI;
-        tooth2.rotation.x = -Math.PI/12;
-        
-        tooth3 = new THREE.Mesh(toothGeom,toothMat);
-        tooth3.position.x = 65;
-        tooth3.position.y = -25;
-        tooth3.position.z = 0;
-        tooth3.rotation.z = halfPI;
-        
-        tooth4 = new THREE.Mesh(toothGeom,toothMat);
-        tooth4.position.x = 65;
-        tooth4.position.y = -30;
-        tooth4.position.z = 25;
-        tooth4.rotation.z = halfPI;
-        tooth4.rotation.x = Math.PI/12;
-        
-        tooth5 = new THREE.Mesh(toothGeom,toothMat);
-        tooth5.position.x = 65;
-        tooth5.position.y = -35;
-        tooth5.position.z = 50;
-        tooth5.rotation.z = halfPI;
-        tooth5.rotation.x = Math.PI/8;
-
         fish3.add(bodyFish);
         fish3.add(sideRightFish);
         fish3.add(sideLeftFish);
@@ -331,14 +309,14 @@
         // Tail
         let tailGeom = new THREE.CylinderGeometry(0, 60, 60, 4, false);
             let tailMat = new THREE.MeshLambertMaterial({
-            color: 0xff00dc,
+            color: 0x2e1d01,
             shading: THREE.FlatShading,
             side: THREE.DoubleSide
         });
         
         tailFish = new THREE.Mesh(tailGeom, tailMat);
         tailFish.scale.set(.8,1,.1);
-        tailFish.position.x = -60; 
+        tailFish.position.x = -250;
         tailFish.rotation.z = -halfPI;
         
         // Lips
@@ -408,12 +386,8 @@
         fish2.add(bodyFish);
         fish2.add(tailFish);
         fish2.add(topFish);
-        fish2.add(sideRightFish);
-        fish2.add(sideLeftFish);
         fish2.add(rightIris);
         fish2.add(leftIris);
-        fish2.add(lipsFish);
-        
         fish2.rotation.y = -Math.PI/4;
         scene.add(fish2);
     }
@@ -444,28 +418,56 @@
     }
 
     let onKeyDown = function(e) {
-        let xSpeed = 0.2;
-        let ySpeed = 0.2;
-        if (e.keyCode == 87) {
-            bait1.position.z -= ySpeed;
-        } else if (e.keyCode == 83) {
-            bait1.position.z += ySpeed;
-        } else if (e.keyCode == 65) {
-            bait1.position.x -= xSpeed;
-        } else if (e.keyCode == 68) {
-            bait1.position.x += xSpeed;
-        } else if (e.keyCode == 32) {
-            if (cast == 0){
-                createBait2();
-                bait2.position.z = bait1.position.z;
-                bait2.position.x = bait1.position.x;
-                scene.remove(bait1);
-                cast = 1;
+        if (e.keyCode == 32) {
+            if (collision == 0 && collision2 == 0 && collision3 == 0){
+                if (cast == 0){
+                    createBait2();
+                    bait2.position.z = bait1.position.z;
+                    bait2.position.x = bait1.position.x;
+                    scene.remove(bait1);
+                    cast = 1;
+                }
+                else if (cast == 1){
+                    scene.remove(bait2);
+                    scene.add(bait1);
+                    cast = 0;
+                }
             }
-            else if (cast == 1){
+            else if (collision == 1){
                 scene.remove(bait2);
                 scene.add(bait1);
                 cast = 0;
+                collision = 0;
+                fish.position.x = 0;
+                fish.position.z = 0;
+                directionx = Math.floor(Math.random()*2);
+                directiony = Math.floor(Math.random()*2);
+                kabur = 0;
+                score++;
+            }
+            else if (collision2 == 1){
+                scene.remove(bait2);
+                scene.add(bait1);
+                cast = 0;
+                collision2 = 0;
+                fish2.position.x = 0;
+                fish2.position.z = 0;
+                directionx2 = Math.floor(Math.random()*2);
+                directiony2 = Math.floor(Math.random()*2);
+                kabur2 = 0;
+                score++;
+            }
+            else if (collision3 == 1){
+                scene.remove(bait2);
+                scene.add(bait1);
+                cast = 0;
+                collision3 = 0;
+                fish3.position.x = 0;
+                fish3.position.z = 0;
+                directionx3 = Math.floor(Math.random()*2);
+                directiony3 = Math.floor(Math.random()*2);
+                kabur3 = 0;
+                score++;
             }
         }
     };
@@ -523,9 +525,6 @@
         mouse = new THREE.Vector2();
         mouse.x = mouse.y = -1;
 
-        pos.addVectors(lookDir, fish.position);
-        fish.lookAt(pos);
-
         // create the renderer   
         renderer = new THREE.WebGLRenderer();   
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -533,84 +532,285 @@
         document.body.appendChild(renderer.domElement);
         document.addEventListener("keydown", onKeyDown, false);
     };
-    let directionx = 1;
-    let directiony = 1;
-    let direction2 = 1;
-    let direction3 = 1;
-    let look = 0;
-    let look2 = 0;
-    let randomx = 1;
-    let randomz = 0;
-    //newDir = new THREE.Vector3((Math.random()*2-1)*0.3, 0, (Math.random()*2-1)*0.3);
-
     
+    let directionx = Math.floor(Math.random()*2); // 1 = kanan, 0 = kiri
+    let directiony = Math.floor(Math.random()*2); // 1 = bawah, 0 = atas
+    let directionx2 = Math.floor(Math.random()*2); // 1 = kanan, 0 = kiri
+    let directiony2 = Math.floor(Math.random()*2); // 1 = bawah, 0 = atas
+    let directionx3 = Math.floor(Math.random()*2); // 1 = kanan, 0 = kiri
+    let directiony3 = Math.floor(Math.random()*2); // 1 = bawah, 0 = atas
+
+    let look, look2;
+    if (directionx == 0) look = 1;
+    else look = 0;
+    if (directiony == 0) look2 = 1;
+    else look2 = 0;
+    
+    let look3, look4;
+    if (directionx2 == 0) look3 = 1;
+    else look3 = 0;
+    if (directiony2 == 0) look4 = 1;
+    else look4 = 0;
+
+    let look5, look6;
+    if (directionx3 == 0) look5 = 1;
+    else look5 = 0;
+    if (directiony3 == 0) look6 = 1;
+    else look6 = 0;
+
+    let randomx, randomz, rot; //random mengatur supaya ikan bergerak ke arah yang random, rot mengatur supaya ikan menghadapi arah pergerakan
+    let randomx2, randomz2, rot2;
+    let randomx3, randomz3, rot3;
+    let kabur = 0, kabur2 = 0, kabur3 = 0;
+
     // main animation loop - calls 50-60 times per second.
     let mainLoop = function() {
-        if (fish.position.x > 30) directionx = 0;
-        if (fish.position.x < -30) directionx = 1;
-        if (fish.position.z > 10) directiony = 0;
-        if (fish.position.z < -10) directiony =1;
-        if (fish2.position.x > 30) direction2 = 0;
-        if (fish2.position.x < -30) direction2 = 1;
-        if (fish3.position.x > 30) direction3 = 0;
-        if (fish3.position.x < -30) direction3 = 1;
+        let delta = clock.getDelta();
+        let moveDistance = 25 * delta; 
 
-        if (directionx == 1 && look == 0){
-            pos.addVectors(lookDir, fish.position);
-            fish.lookAt(pos);
+        if ( keyboard.pressed("A") )
+            bait1.position.x -= moveDistance;
+        if ( keyboard.pressed("D") )
+            bait1.position.x += moveDistance;
+        if ( keyboard.pressed("W") )
+            bait1.position.z -= moveDistance;
+        if ( keyboard.pressed("S") )
+            bait1.position.z += moveDistance;
+
+        if (fish.position.x > 30){ //jika tabrak kanan, ikan bergerak ke kiri
+            directionx = 0;
+        } 
+        if (fish.position.x < -30){ //jika tabrak kiri, ikan bergerak ke kanan
+            directionx = 1;
+        } 
+        if (fish.position.z > 10){ //jika tabrak bawah, ikan bergerak ke atas
+            directiony = 0;
+        } 
+        if (fish.position.z < -10){ //jika tabrak atas, ikan bergerak ke bawah
+            directiony = 1;
+        } 
+        if (fish2.position.x > 30){ 
+            directionx2 = 0;
+        } 
+        if (fish2.position.x < -30){ 
+            directionx2 = 1;
+        } 
+        if (fish2.position.z > 10){ 
+            directiony2 = 0;
+        } 
+        if (fish2.position.z < -10){ 
+            directiony2 = 1;
+        } 
+        if (fish3.position.x > 30){ 
+            directionx3 = 0;
+        } 
+        if (fish3.position.x < -30){ 
+            directionx3 = 1;
+        } 
+        if (fish3.position.z > 10){ 
+            directiony3 = 0;
+        } 
+        if (fish3.position.z < -10){ 
+            directiony3 = 1;
+        } 
+
+        if (directionx == 1 && look == 0){ //kanan
+            randomz = getRandom(-0.1,0.1);
+            newDir = new THREE.Vector3(getRandom(0.01,0.1), 0, randomz);
             look = 1;
-            randomz = (Math.random()-0.5)*0.3;
-            newDir = new THREE.Vector3(Math.random()*0.3, 0, randomz);
             if(randomz < 0) look2 = 0;
             else look2 = 1;
         }
-        if (directionx == 0 && look == 1){
-            randomz = (Math.random()-0.5)*0.3;
-            newDir = new THREE.Vector3(Math.random()*(-0.3), 0, randomz);
+        if (directionx == 0 && look == 1){ //kiri
+            randomz = getRandom(-0.1,0.1);
+            newDir = new THREE.Vector3(getRandom(-0.1,-0.01), 0, randomz);
             look = 0;
             if(randomz < 0) look2 = 0;
             else look2 = 1;
         }
-        if (directiony == 1 && look2 == 0){
-            randomx = (Math.random()-0.5)*0.3;
-            newDir = new THREE.Vector3(randomx, 0, Math.random()*(0.3));
+        if (directiony == 1 && look2 == 0){ //bawah
+            randomx = getRandom(-0.1,0.1);
+            newDir = new THREE.Vector3(randomx, 0, getRandom(0.01,0.1));
             look2 = 1;
             if(randomx < 0) look = 0;
             else look = 1;
         }
-        if (directiony == 0 && look2 == 1){
-            randomx = (Math.random()-0.5)*0.3;
-            newDir = new THREE.Vector3(randomx, 0, Math.random()*(-0.3));
+        if (directiony == 0 && look2 == 1){ //atas
+            randomx = getRandom(-0.1,0.1);
+            newDir = new THREE.Vector3(randomx, 0, getRandom(-0.1,-0.01));
             look2 = 0;
             if(randomx < 0) look = 0;
             else look = 1;
         }
-        if (collision == 0){
-            fish.position.add(newDir);
-        } 
-        if (direction2 == 1 && collision == 0){
-            fish2.position.x += 0.1;
-            fish2.rotation.y = 0;
-        } 
-        else if (direction2 == 0 && collision == 0){
-            fish2.position.x -= 0.1;
-            fish2.rotation.y = 3.14;
-        } 
-        if (direction3 == 1 && collision == 0){
-            fish3.position.x += 0.1;
-            fish3.rotation.y = 0;
-        } 
-        else if (direction3 == 0 && collision == 0){
-            fish3.position.x -= 0.1;
-            fish3.rotation.y = 3.14;
-        } 
+        if (directiony == 1){
+            rot = 1;
+        }
+        if (directiony == 0){
+            rot = 2;
+        }
+        if (rot == 1){
+            rot = 0;
+            pos.addVectors(newDir, fish.position);
+            fish.lookAt(pos);
+            fish.rotation.y -= halfPI;
+        }
+        if (rot == 2){
+            rot = 0;
+            pos.addVectors(newDir, fish.position);
+            fish.lookAt(pos);
+            fish.rotation.y += halfPI;
+        }
+        if (directionx2 == 1 && look3 == 0){ //kanan
+            randomz2 = (Math.random()-0.5)*0.3;
+            newDir2 = new THREE.Vector3(Math.random()*0.3, 0, randomz2);
+            look3 = 1;
+            if(randomz2 < 0) look4 = 0;
+            else look4 = 1;
+        }
+        if (directionx2 == 0 && look3 == 1){ //kiri
+            randomz2 = (Math.random()-0.5)*0.3;
+            newDir2 = new THREE.Vector3(Math.random()*(-0.3), 0, randomz2);
+            look3 = 0;
+            if(randomz2 < 0) look4 = 0;
+            else look4 = 1;
+        }
+        if (directiony2 == 1 && look4 == 0){ //bawah
+            randomx2 = (Math.random()-0.5)*0.3;
+            newDir2 = new THREE.Vector3(randomx2, 0, Math.random()*(0.3));
+            look4 = 1;
+            if(randomx2 < 0) look3 = 0;
+            else look3 = 1;
+        }
+        if (directiony2 == 0 && look4 == 1){ //atas
+            randomx2 = (Math.random()-0.5)*0.3;
+            newDir2 = new THREE.Vector3(randomx2, 0, Math.random()*(-0.3));
+            look4 = 0;
+            if(randomx2 < 0) look3 = 0;
+            else look3 = 1;
+        }
+        if (directiony2 == 1){
+            rot2 = 1;
+        }
+        if (directiony2 == 0){
+            rot2 = 2;
+        }
+        if (rot2 == 1){
+            rot2 = 0;
+            pos2.addVectors(newDir2, fish2.position);
+            fish2.lookAt(pos2);
+            fish2.rotation.y -= halfPI;
+        }
+        if (rot2 == 2){
+            rot2 = 0;
+            pos2.addVectors(newDir2, fish2.position);
+            fish2.lookAt(pos2);
+            fish2.rotation.y += halfPI;
+        }
+        if (directionx3 == 1 && look5 == 0){ //kanan
+            randomz3 = (Math.random()-0.5)*0.3;
+            newDir3 = new THREE.Vector3(Math.random()*0.3, 0, randomz3);
+            look5 = 1;
+            if(randomz3 < 0) look6 = 0;
+            else look6 = 1;
+        }
+        if (directionx3 == 0 && look5 == 1){ //kiri
+            randomz3 = (Math.random()-0.5)*0.3;
+            newDir3 = new THREE.Vector3(Math.random()*(-0.3), 0, randomz3);
+            look5 = 0;
+            if(randomz3 < 0) look6 = 0;
+            else look6 = 1;
+        }
+        if (directiony3 == 1 && look6 == 0){ //bawah
+            randomx3 = (Math.random()-0.5)*0.3;
+            newDir3 = new THREE.Vector3(randomx3, 0, Math.random()*(0.3));
+            look6 = 1;
+            if(randomx3 < 0) look5 = 0;
+            else look5 = 1;
+        }
+        if (directiony3 == 0 && look6 == 1){ //atas
+            randomx3 = (Math.random()-0.5)*0.3;
+            newDir3 = new THREE.Vector3(randomx3, 0, Math.random()*(-0.3));
+            look6 = 0;
+            if(randomx3 < 0) look5 = 0;
+            else look5 = 1;
+        }
+        if (directiony3 == 1){
+            rot3 = 1;
+        }
+        if (directiony3 == 0){
+            rot3 = 2;
+        }
+        if (rot3 == 1){
+            rot3 = 0;
+            pos3.addVectors(newDir3, fish3.position);
+            fish3.lookAt(pos3);
+            fish3.rotation.y -= halfPI;
+        }
+        if (rot3 == 2){
+            rot3 = 0;
+            pos3.addVectors(newDir3, fish3.position);
+            fish3.lookAt(pos3);
+            fish3.rotation.y += halfPI;
+        }
         if (cast == 1){
-            if (fish.position.x < bait2.position.x + 2 && fish.position.x > bait.position.x - 2 && fish.position.y < 
-            bait2.position.y + 2 && fish.position.y > bait2.position.y - 2){
+            if (fish.position.x <= bait2.position.x+1 && fish.position.x >= bait2.position.x-1 && fish.position.z <= 
+            bait2.position.z+1 && fish.position.z >= bait2.position.z-1){
                 collision = 1;
             }
+            if (fish2.position.x <= bait2.position.x+1 && fish2.position.x >= bait2.position.x-1 && fish2.position.z <= 
+            bait2.position.z+1 && fish2.position.z >= bait2.position.z-1){
+                collision2 = 1;
+            }
+            if (fish3.position.x <= bait2.position.x+1 && fish3.position.x >= bait2.position.x-1 && fish3.position.z <= 
+            bait2.position.z+1 && fish3.position.z >= bait2.position.z-1){
+                collision3 = 1;
+            }
         }
-        
+        if (collision == 0){
+            fish.position.add(newDir);
+        }
+        if (collision == 1){
+            kabur++;
+            if (kabur >= 100){
+                collision = 0;
+                scene.remove(bait2);
+                scene.add(bait1);
+                cast = 0;
+                bait1.position.x = 0;
+                bait1.position.z = 0;
+                kabur = 0;
+            }
+        }
+        if (collision2 == 0){
+            fish2.position.add(newDir2);
+        }
+        if (collision2 == 1){
+            kabur2++;
+            if (kabur2 >= 100){
+                collision2 = 0;
+                scene.remove(bait2);
+                scene.add(bait1);
+                cast = 0;
+                bait1.position.x = 0;
+                bait1.position.z = 0;
+                kabur2 = 0;
+            }
+        }
+        if (collision3 == 0){
+            fish3.position.add(newDir3);
+        }
+        if (collision3 == 1){
+            kabur3++;
+            if (kabur3 >= 100){
+                collision3 = 0;
+                scene.remove(bait2);
+                scene.add(bait1);
+                cast = 0;
+                bait1.position.x = 0;
+                bait1.position.z = 0;
+                kabur3 = 0;
+            }
+        }
         lightHelper.update();
         renderer.render(scene, camera);
         requestAnimationFrame(mainLoop);
@@ -619,7 +819,6 @@
     ///////////////////////////////////////////////
     init();
     mainLoop();
-    
     
 </script>
 
