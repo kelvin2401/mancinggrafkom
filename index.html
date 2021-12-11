@@ -5,6 +5,7 @@
         <script src="js/THREEx.KeyboardState.js"></script>    
     </head>
     <body>
+        <p id="score"></p>
         <div style="position:relative">
             <img src=controls.png
                style="position:absolute; top: 775px; left:30px; width:250px; height:80px; border:none;" />
@@ -566,7 +567,7 @@
     // main animation loop - calls 50-60 times per second.
     let mainLoop = function() {
         let delta = clock.getDelta();
-        let moveDistance = 25 * delta; 
+        let moveDistance = 18 * delta; 
 
         if ( keyboard.pressed("A") )
             bait1.position.x -= moveDistance;
@@ -814,9 +815,11 @@
         lightHelper.update();
         renderer.render(scene, camera);
         requestAnimationFrame(mainLoop);
+    document.getElementById("score").innerHTML = score;
     };
     
     ///////////////////////////////////////////////
+    
     init();
     mainLoop();
     
