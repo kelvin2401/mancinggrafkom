@@ -483,11 +483,6 @@
             scene.fog = new THREE.Fog(color, 10, 100);
         }
         scene.background = new THREE.Color(0xadd8e6);
-
-        //const axesHelper = new THREE.AxesHelper( 15 );
-        //scene.add( axesHelper );  
-
-        // create an locate the camera
      
         camera = new THREE.PerspectiveCamera(75, 
                         window.innerWidth / window.innerHeight, 
@@ -496,6 +491,18 @@
         camera.position.set(0, 15, 30);
         camera.rotation.x = -0.5;
 
+        listener = new THREE.AudioListener();
+        camera.add( listener );
+
+        sound = new THREE.Audio( listener );
+
+        audioLoader = new THREE.AudioLoader();
+        audioLoader.load( 'sea.ogg', function( buffer ) {
+            sound.setBuffer( buffer );
+            sound.setLoop( true );
+            sound.play();
+        });
+
         light = new THREE.AmbientLight(0xffffff, 0.5);
         scene.add(light);    
 
@@ -503,7 +510,6 @@
         light1.position.set(5,5,10); 
 
         lightHelper = new THREE.DirectionalLightHelper(light1, 2, 0x000000);
-        //scene.add(lightHelper);
 
         scene.add(light1);
         
@@ -515,7 +521,7 @@
         circle.position.y = -1;
         fish.scale.set(0.02,0.02,0.02);
         fish.rotation.y = 0;
-        fish2.scale.set(0.02,0.02,0.02);
+        fish2.scale.set(0.01,0.01,0.01);
         fish2.position.x = -10;
         fish2.rotation.y = 0;
         fish3.scale.set(0.02,0.02,0.02);
@@ -563,6 +569,9 @@
     let randomx2, randomz2, rot2;
     let randomx3, randomz3, rot3;
     let kabur = 0, kabur2 = 0, kabur3 = 0;
+    let listener;
+    let sound;
+    let audioLoader;
 
     // main animation loop - calls 50-60 times per second.
     let mainLoop = function() {
@@ -754,16 +763,16 @@
             fish3.rotation.y += halfPI;
         }
         if (cast == 1){
-            if (fish.position.x <= bait2.position.x+1 && fish.position.x >= bait2.position.x-1 && fish.position.z <= 
-            bait2.position.z+1 && fish.position.z >= bait2.position.z-1){
+            if (fish.position.x <= bait2.position.x+2 && fish.position.x >= bait2.position.x-2 && fish.position.z <= 
+            bait2.position.z+2 && fish.position.z >= bait2.position.z-2){
                 collision = 1;
             }
-            if (fish2.position.x <= bait2.position.x+1 && fish2.position.x >= bait2.position.x-1 && fish2.position.z <= 
-            bait2.position.z+1 && fish2.position.z >= bait2.position.z-1){
+            if (fish2.position.x <= bait2.position.x+4 && fish2.position.x >= bait2.position.x-4 && fish2.position.z <= 
+            bait2.position.z+4 && fish2.position.z >= bait2.position.z-4){
                 collision2 = 1;
             }
-            if (fish3.position.x <= bait2.position.x+1 && fish3.position.x >= bait2.position.x-1 && fish3.position.z <= 
-            bait2.position.z+1 && fish3.position.z >= bait2.position.z-1){
+            if (fish3.position.x <= bait2.position.x+2 && fish3.position.x >= bait2.position.x-2 && fish3.position.z <= 
+            bait2.position.z+2 && fish3.position.z >= bait2.position.z-2){
                 collision3 = 1;
             }
         }
