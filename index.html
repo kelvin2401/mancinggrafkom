@@ -16,7 +16,7 @@
 <script>    
     let scene, camera, renderer, light1, cube, smallcube, lightHelper, rayCast, score = 0;
     let ADD = 0.05;
-    let bait1, bait2, cast = 0, collision = 0, collision2 = 0, collision3 = 0;
+    let bait1, bait2, cast = 0, collision = 0, collision2 = 0, collision3 = 0, collision4 = 0, collision5 = 0;
     let fish, bodyFish, tailFish,topFish,rightIris, leftIris, rightEye, leftEye, lipsFish, tooth1, tooth2, tooth3, tooth4, tooth5;
     let halfPI = Math.PI/2;
     let newDir = new THREE.Vector3(0, 0, 0);
@@ -25,6 +25,10 @@
     let pos2 = new THREE.Vector3();
     let newDir3 = new THREE.Vector3(0, 0, 0);
     let pos3 = new THREE.Vector3();
+    let newDir4 = new THREE.Vector3(0, 0, 0);
+    let pos4 = new THREE.Vector3();
+    let newDir5 = new THREE.Vector3(0, 0, 0);
+    let pos5 = new THREE.Vector3();
     let loader = new THREE.TextureLoader();
     var keyboard = new THREEx.KeyboardState();
     var clock = new THREE.Clock();
@@ -393,6 +397,271 @@
         scene.add(fish2);
     }
 
+
+    let createFish4 = function() {
+        // A group that will contain each part of the fish
+        fish4 = new THREE.Group();
+        // each part needs a geometry, a material, and a mesh
+        
+        // Body 
+        let bodyGeom = new THREE.BoxGeometry(120, 120, 120);
+            let bodyMat = new THREE.MeshLambertMaterial({
+            color: 0xf44336 ,
+            shading: THREE.FlatShading
+        });
+        bodyFish = new THREE.Mesh(bodyGeom, bodyMat);
+        
+        // Tail
+        let tailGeom = new THREE.CylinderGeometry(0, 60, 60, 4, false);
+            let tailMat = new THREE.MeshLambertMaterial({
+            color: 0xff00dc,
+            shading: THREE.FlatShading
+        });
+        
+        tailFish = new THREE.Mesh(tailGeom, tailMat);
+        tailFish.scale.set(.8,1,.1);
+        tailFish.position.x = -60; 
+        tailFish.rotation.z = -halfPI;
+        
+        // Lips
+        let lipsGeom = new THREE.BoxGeometry(25, 10, 120);
+        let lipsMat = new THREE.MeshLambertMaterial({
+            color: 0xf44336 ,
+            shading: THREE.FlatShading
+        });
+        lipsFish = new THREE.Mesh(lipsGeom, lipsMat);
+        lipsFish.position.x = 65;
+        lipsFish.position.y = -47;
+        lipsFish.rotation.z = halfPI;
+        
+        // Fins
+        topFish = new THREE.Mesh(tailGeom, tailMat);
+        topFish.scale.set(.8,1,.1);
+        topFish.position.x = -20; 
+        topFish.position.y = 60; 
+        topFish.rotation.z = -halfPI;
+        
+        sideRightFish = new THREE.Mesh(tailGeom, tailMat);
+        sideRightFish.scale.set(.8,1,.1);
+        sideRightFish.rotation.x = halfPI;
+        sideRightFish.rotation.z = -halfPI;
+        sideRightFish.position.x = 0; 
+        sideRightFish.position.y = -50; 
+        sideRightFish.position.z = -60; 
+        
+        sideLeftFish = new THREE.Mesh(tailGeom, tailMat);
+        sideLeftFish.scale.set(.8,1,.1);
+        sideLeftFish.rotation.x = halfPI;
+        sideLeftFish.rotation.z = -halfPI;
+        sideLeftFish.position.x = 0; 
+        sideLeftFish.position.y = -50; 
+        sideLeftFish.position.z = 60; 
+        
+        // Eyes
+        let eyeGeom = new THREE.BoxGeometry(40, 40,5);
+        let eyeMat = new THREE.MeshLambertMaterial({
+            color: 0xffffff,
+            shading: THREE.FlatShading
+        });
+        
+        rightEye = new THREE.Mesh(eyeGeom,eyeMat );
+        rightEye.position.z = -60;
+        rightEye.position.x = 25;
+        rightEye.position.y = -10;
+        
+        let irisGeom = new THREE.BoxGeometry(10, 10,3);
+        let irisMat = new THREE.MeshLambertMaterial({
+            color: 0x330000,
+            shading: THREE.FlatShading
+        });
+        
+        rightIris = new THREE.Mesh(irisGeom,irisMat );
+        rightIris.position.z = -65;
+        rightIris.position.x = 35;
+        rightIris.position.y = -10;
+        
+        leftEye = new THREE.Mesh(eyeGeom,eyeMat );
+        leftEye.position.z = 60;
+        leftEye.position.x = 25;
+        leftEye.position.y = -10;
+        
+        leftIris = new THREE.Mesh(irisGeom,irisMat );
+        leftIris.position.z = 65;
+        leftIris.position.x = 35;
+        leftIris.position.y = -10;
+            
+        let toothGeom = new THREE.BoxGeometry(20, 4, 20);
+        let toothMat = new THREE.MeshLambertMaterial({
+            color: 0xffffff,
+            shading: THREE.FlatShading
+        });
+        
+        // Teeth
+        tooth1 = new THREE.Mesh(toothGeom,toothMat);
+        tooth1.position.x = 65;
+        tooth1.position.y = -35;
+        tooth1.position.z = -50;
+        tooth1.rotation.z = halfPI;
+        tooth1.rotation.x = -halfPI;
+        
+        tooth2 = new THREE.Mesh(toothGeom,toothMat);
+        tooth2.position.x = 65;
+        tooth2.position.y = -30;
+        tooth2.position.z = -25;
+        tooth2.rotation.z = halfPI;
+        tooth2.rotation.x = -Math.PI/12;
+        
+        tooth3 = new THREE.Mesh(toothGeom,toothMat);
+        tooth3.position.x = 65;
+        tooth3.position.y = -25;
+        tooth3.position.z = 0;
+        tooth3.rotation.z = halfPI;
+        
+        tooth4 = new THREE.Mesh(toothGeom,toothMat);
+        tooth4.position.x = 65;
+        tooth4.position.y = -30;
+        tooth4.position.z = 25;
+        tooth4.rotation.z = halfPI;
+        tooth4.rotation.x = Math.PI/12;
+        
+        tooth5 = new THREE.Mesh(toothGeom,toothMat);
+        tooth5.position.x = 65;
+        tooth5.position.y = -35;
+        tooth5.position.z = 50;
+        tooth5.rotation.z = halfPI;
+        tooth5.rotation.x = Math.PI/8;
+        
+        
+        fish4.add(bodyFish);
+        fish4.add(tailFish);
+        fish4.add(topFish);
+        fish4.add(sideRightFish);
+        fish4.add(sideLeftFish);
+        fish4.add(rightEye);
+        fish4.add(rightIris);
+        fish4.add(leftEye);
+        fish4.add(leftIris);
+        fish4.add(tooth1);
+        fish4.add(tooth2);
+        fish4.add(tooth3);
+        fish4.add(tooth4);
+        fish4.add(tooth5);
+        fish4.add(lipsFish);
+        
+        fish4.rotation.y = -Math.PI/4;
+        fish4.rotation.z = 4;
+        scene.add(fish4);
+    }
+
+    let createFish5 = function() {
+        // A group that will contain each part of the fish
+        fish5 = new THREE.Group();
+        // each part needs a geometry, a material, and a mesh
+
+        // Head
+        let headGeom = new THREE.BoxGeometry(70, 100, 80);
+            let headMat = new THREE.MeshLambertMaterial({
+            color: 0x836443 ,
+            shading: THREE.FlatShading
+        });
+        headFish = new THREE.Mesh(headGeom, headMat);
+        headFish.position.x = 280;
+        headFish.position.y = 10;
+        
+        // Body 
+        let bodyGeom = new THREE.BoxGeometry(500, 120, 80);
+            let bodyMat = new THREE.MeshLambertMaterial({
+            color: 0x34281b ,
+            shading: THREE.FlatShading
+        });
+        bodyFish = new THREE.Mesh(bodyGeom, bodyMat);
+        
+        // Tail
+        let tailGeom = new THREE.CylinderGeometry(0, 60, 60, 4, false);
+            let tailMat = new THREE.MeshLambertMaterial({
+            color: 0x2e1d01,
+            shading: THREE.FlatShading,
+            side: THREE.DoubleSide
+        });
+        
+        tailFish = new THREE.Mesh(tailGeom, tailMat);
+        tailFish.scale.set(.8,1,.1);
+        tailFish.position.x = -250;
+        tailFish.rotation.z = -halfPI;
+        
+        // Lips
+        let lipsGeom = new THREE.BoxGeometry(25, 10, 120);
+        let lipsMat = new THREE.MeshLambertMaterial({
+            color: 0x80f5fe ,
+            shading: THREE.FlatShading
+        });
+        lipsFish = new THREE.Mesh(lipsGeom, lipsMat);
+        lipsFish.position.x = 65;
+        lipsFish.position.y = -47;
+        lipsFish.rotation.z = halfPI;
+        
+        // Fins
+        topFish = new THREE.Mesh(tailGeom, tailMat);
+        topFish.scale.set(.8,1,.1);
+        topFish.position.x = -20; 
+        topFish.position.y = 60; 
+        topFish.rotation.z = -halfPI;
+        
+        sideRightFish = new THREE.Mesh(tailGeom, tailMat);
+        sideRightFish.scale.set(.8,1,.1);
+        sideRightFish.rotation.x = halfPI;
+        sideRightFish.rotation.z = -halfPI;
+        sideRightFish.position.x = 0; 
+        sideRightFish.position.y = -50; 
+        sideRightFish.position.z = -60; 
+        
+        sideLeftFish = new THREE.Mesh(tailGeom, tailMat);
+        sideLeftFish.scale.set(.8,1,.1);
+        sideLeftFish.rotation.x = halfPI;
+        sideLeftFish.rotation.z = -halfPI;
+        sideLeftFish.position.x = 0; 
+        sideLeftFish.position.y = -50; 
+        sideLeftFish.position.z = 60; 
+        
+        // Eyes
+        let eyeGeom = new THREE.BoxGeometry(40, 40,5);
+        let eyeMat = new THREE.MeshLambertMaterial({
+            color: 0xffffff,
+            shading: THREE.FlatShading
+        });
+        
+        let irisGeom = new THREE.BoxGeometry(25, 25,3);
+        let irisMat = new THREE.MeshLambertMaterial({
+            color: 0x330000,
+            shading: THREE.FlatShading
+        });
+        
+        rightIris = new THREE.Mesh(irisGeom,irisMat );
+        rightIris.position.z = -45;
+        rightIris.position.x = 280;
+        rightIris.position.y = 25;
+        
+        leftIris = new THREE.Mesh(irisGeom,irisMat );
+        leftIris.position.z = 40;
+        leftIris.position.x = 280;
+        leftIris.position.y = 25;
+            
+        let toothGeom = new THREE.BoxGeometry(20, 4, 20);
+        let toothMat = new THREE.MeshLambertMaterial({
+            color: 0xffffff,
+            shading: THREE.FlatShading
+        });
+        
+        fish5.add(headFish);
+        fish5.add(bodyFish);
+        fish5.add(tailFish);
+        fish5.add(topFish);
+        fish5.add(rightIris);
+        fish5.add(leftIris);
+        fish5.rotation.y = -Math.PI/4;
+        scene.add(fish5);
+    }
+
     let createPool = function() {
         let material = new THREE.MeshBasicMaterial({color: 006994, side: THREE.DoubleSide});
         let geometry = new THREE.CircleGeometry(1000,24);
@@ -420,7 +689,7 @@
 
     let onKeyDown = function(e) {
         if (e.keyCode == 32) {
-            if (collision == 0 && collision2 == 0 && collision3 == 0){
+            if (collision == 0 && collision2 == 0 && collision3 == 0 && collision4 == 0 && collision5 == 0){
                 if (cast == 0){
                     createBait2();
                     bait2.position.z = bait1.position.z;
@@ -445,6 +714,7 @@
                 directiony = Math.floor(Math.random()*2);
                 kabur = 0;
                 score++;
+                checksplash = 0;
             }
             else if (collision2 == 1){
                 scene.remove(bait2);
@@ -457,6 +727,7 @@
                 directiony2 = Math.floor(Math.random()*2);
                 kabur2 = 0;
                 score++;
+                checksplash = 0;
             }
             else if (collision3 == 1){
                 scene.remove(bait2);
@@ -469,10 +740,42 @@
                 directiony3 = Math.floor(Math.random()*2);
                 kabur3 = 0;
                 score++;
+                checksplash = 0;
+            }
+            else if (collision4 == 1){
+                scene.remove(bait2);
+                scene.add(bait1);
+                cast = 0;
+                collision4 = 0;
+                fish4.position.x = 0;
+                fish4.position.z = 0;
+                directionx4 = Math.floor(Math.random()*2);
+                directiony4 = Math.floor(Math.random()*2);
+                kabur4 = 0;
+                score++;
+                checksplash = 0;
+            }
+            else if (collision5 == 1){
+                scene.remove(bait2);
+                scene.add(bait1);
+                cast = 0;
+                collision5 = 0;
+                fish5.position.x = 0;
+                fish5.position.z = 0;
+                directionx5 = Math.floor(Math.random()*2);
+                directiony5 = Math.floor(Math.random()*2);
+                kabur5 = 0;
+                score++;
+                checksplash = 0;
             }
         }
     };
     
+    let splash = function() {
+        var audio = new Audio('splash.ogg');
+        audio.play();
+    }
+
     // set up the environment - 
     // initiallize scene, camera, objects and renderer
     let init = function() {
@@ -516,6 +819,8 @@
         createFish();
         createFish2();
         createFish3();
+        createFish4();
+        createFish5();
         createPool();
         createBait1();
         circle.position.y = -1;
@@ -527,6 +832,11 @@
         fish3.scale.set(0.02,0.02,0.02);
         fish3.position.x = -20;
         fish3.rotation.y = 0;
+        fish4.scale.set(0.02,0.02,0.02);
+        fish4.rotation.y = 0;
+        fish5.scale.set(0.01,0.01,0.01);
+        fish5.position.x = -10;
+        fish5.rotation.y = 0;
 
         rayCast = new THREE.Raycaster();
         mouse = new THREE.Vector2();
@@ -546,6 +856,10 @@
     let directiony2 = Math.floor(Math.random()*2); // 1 = bawah, 0 = atas
     let directionx3 = Math.floor(Math.random()*2); // 1 = kanan, 0 = kiri
     let directiony3 = Math.floor(Math.random()*2); // 1 = bawah, 0 = atas
+    let directionx4 = Math.floor(Math.random()*2); // 1 = kanan, 0 = kiri
+    let directiony4 = Math.floor(Math.random()*2); // 1 = bawah, 0 = atas
+    let directionx5 = Math.floor(Math.random()*2); // 1 = kanan, 0 = kiri
+    let directiony5 = Math.floor(Math.random()*2); // 1 = bawah, 0 = atas
 
     let look, look2;
     if (directionx == 0) look = 1;
@@ -565,13 +879,28 @@
     if (directiony3 == 0) look6 = 1;
     else look6 = 0;
 
+    let look7, look8;
+    if (directionx4 == 0) look7 = 1;
+    else look7 = 0;
+    if (directiony4 == 0) look8 = 1;
+    else look8 = 0;
+
+    let look9, look10;
+    if (directionx5 == 0) look9 = 1;
+    else look7 = 0;
+    if (directiony5 == 0) look10 = 1;
+    else look10 = 0;
+
     let randomx, randomz, rot; //random mengatur supaya ikan bergerak ke arah yang random, rot mengatur supaya ikan menghadapi arah pergerakan
     let randomx2, randomz2, rot2;
     let randomx3, randomz3, rot3;
-    let kabur = 0, kabur2 = 0, kabur3 = 0;
+    let randomx4, randomz4, rot4;
+    let randomx5, randomz5, rot5;
+    let kabur = 0, kabur2 = 0, kabur3 = 0, kabur4 = 0, kabur5 = 0;
     let listener;
     let sound;
     let audioLoader;
+    let checksplash = 0;
 
     // main animation loop - calls 50-60 times per second.
     let mainLoop = function() {
@@ -623,6 +952,30 @@
         if (fish3.position.z < -10){ 
             directiony3 = 1;
         } 
+        if (fish4.position.x > 30){ 
+            directionx4 = 0;
+        } 
+        if (fish4.position.x < -30){ 
+            directionx4 = 1;
+        } 
+        if (fish4.position.z > 10){ 
+            directiony4 = 0;
+        } 
+        if (fish4.position.z < -10){ 
+            directiony4 = 1;
+        } 
+        if (fish5.position.x > 30){ 
+            directionx5 = 0;
+        } 
+        if (fish5.position.x < -30){ 
+            directionx5 = 1;
+        } 
+        if (fish5.position.z > 10){ 
+            directiony5 = 0;
+        } 
+        if (fish5.position.z < -10){ 
+            directiony5 = 1;
+        } 
 
         if (directionx == 1 && look == 0){ //kanan
             randomz = getRandom(-0.1,0.1);
@@ -670,6 +1023,7 @@
             fish.lookAt(pos);
             fish.rotation.y += halfPI;
         }
+
         if (directionx2 == 1 && look3 == 0){ //kanan
             randomz2 = (Math.random()-0.5)*0.3;
             newDir2 = new THREE.Vector3(Math.random()*0.3, 0, randomz2);
@@ -716,6 +1070,7 @@
             fish2.lookAt(pos2);
             fish2.rotation.y += halfPI;
         }
+
         if (directionx3 == 1 && look5 == 0){ //kanan
             randomz3 = (Math.random()-0.5)*0.3;
             newDir3 = new THREE.Vector3(Math.random()*0.3, 0, randomz3);
@@ -762,18 +1117,142 @@
             fish3.lookAt(pos3);
             fish3.rotation.y += halfPI;
         }
+
+        if (directionx4 == 1 && look7 == 0){ //kanan
+            randomz4 = (Math.random()-0.5)*0.3;
+            newDir4 = new THREE.Vector3(Math.random()*0.3, 0, randomz4);
+            look7 = 1;
+            if(randomz4 < 0) look8 = 0;
+            else look8 = 1;
+        }
+        if (directionx4 == 0 && look7 == 1){ //kiri
+            randomz4 = (Math.random()-0.5)*0.3;
+            newDir4 = new THREE.Vector3(Math.random()*(-0.3), 0, randomz4);
+            look7 = 0;
+            if(randomz4 < 0) look8 = 0;
+            else look8 = 1;
+        }
+        if (directiony4 == 1 && look8 == 0){ //bawah
+            randomx4 = (Math.random()-0.5)*0.3;
+            newDir4 = new THREE.Vector3(randomx4, 0, Math.random()*(0.3));
+            look8 = 1;
+            if(randomx4 < 0) look7 = 0;
+            else look7 = 1;
+        }
+        if (directiony4 == 0 && look8 == 1){ //atas
+            randomx4 = (Math.random()-0.5)*0.3;
+            newDir4 = new THREE.Vector3(randomx4, 0, Math.random()*(-0.3));
+            look8 = 0;
+            if(randomx4 < 0) look7 = 0;
+            else look7 = 1;
+        }
+        if (directiony4 == 1){
+            rot4 = 1;
+        }
+        if (directiony4 == 0){
+            rot4 = 2;
+        }
+        if (rot4 == 1){
+            rot4 = 0;
+            pos4.addVectors(newDir4, fish4.position);
+            fish4.lookAt(pos4);
+            fish4.rotation.y -= halfPI;
+        }
+        if (rot4 == 2){
+            rot4 = 0;
+            pos4.addVectors(newDir4, fish4.position);
+            fish4.lookAt(pos4);
+            fish4.rotation.y += halfPI;
+        }
+
+        if (directionx5 == 1 && look9 == 0){ //kanan
+            randomz5 = (Math.random()-0.5)*0.3;
+            newDir5 = new THREE.Vector3(Math.random()*0.3, 0, randomz5);
+            look9 = 1;
+            if(randomz5 < 0) look10 = 0;
+            else look10 = 1;
+        }
+        if (directionx5 == 0 && look9 == 1){ //kiri
+            randomz5 = (Math.random()-0.5)*0.3;
+            newDir5 = new THREE.Vector3(Math.random()*(-0.3), 0, randomz5);
+            look9 = 0;
+            if(randomz5 < 0) look10 = 0;
+            else look10 = 1;
+        }
+        if (directiony5 == 1 && look10 == 0){ //bawah
+            randomx5 = (Math.random()-0.5)*0.3;
+            newDir5 = new THREE.Vector3(randomx5, 0, Math.random()*(0.3));
+            look10 = 1;
+            if(randomx5 < 0) look9 = 0;
+            else look9 = 1;
+        }
+        if (directiony5 == 0 && look10 == 1){ //atas
+            randomx5 = (Math.random()-0.5)*0.3;
+            newDir5 = new THREE.Vector3(randomx5, 0, Math.random()*(-0.3));
+            look10 = 0;
+            if(randomx5 < 0) look9 = 0;
+            else look9 = 1;
+        }
+        if (directiony5 == 1){
+            rot5 = 1;
+        }
+        if (directiony5 == 0){
+            rot5 = 2;
+        }
+        if (rot5 == 1){
+            rot5 = 0;
+            pos5.addVectors(newDir5, fish5.position);
+            fish5.lookAt(pos5);
+            fish5.rotation.y -= halfPI;
+        }
+        if (rot5 == 2){
+            rot5 = 0;
+            pos5.addVectors(newDir5, fish5.position);
+            fish5.lookAt(pos5);
+            fish5.rotation.y += halfPI;
+        }
+
+
         if (cast == 1){
             if (fish.position.x <= bait2.position.x+2 && fish.position.x >= bait2.position.x-2 && fish.position.z <= 
             bait2.position.z+2 && fish.position.z >= bait2.position.z-2){
                 collision = 1;
+                if(checksplash == 0){
+                    splash();
+                    checksplash = 1;
+                } 
             }
             if (fish2.position.x <= bait2.position.x+4 && fish2.position.x >= bait2.position.x-4 && fish2.position.z <= 
             bait2.position.z+4 && fish2.position.z >= bait2.position.z-4){
                 collision2 = 1;
+                if(checksplash == 0){
+                    splash();
+                    checksplash = 1;
+                } 
             }
             if (fish3.position.x <= bait2.position.x+2 && fish3.position.x >= bait2.position.x-2 && fish3.position.z <= 
             bait2.position.z+2 && fish3.position.z >= bait2.position.z-2){
                 collision3 = 1;
+                if(checksplash == 0){
+                    splash();
+                    checksplash = 1;
+                } 
+            }
+            if (fish4.position.x <= bait2.position.x+2 && fish4.position.x >= bait2.position.x-2 && fish4.position.z <= 
+            bait2.position.z+2 && fish4.position.z >= bait2.position.z-2){
+                collision4 = 1;
+                if(checksplash == 0){
+                    splash();
+                    checksplash = 1;
+                } 
+            }
+            if (fish5.position.x <= bait2.position.x+2 && fish5.position.x >= bait2.position.x-2 && fish5.position.z <= 
+            bait2.position.z+2 && fish5.position.z >= bait2.position.z-2){
+                collision5 = 1;
+                if(checksplash == 0){
+                    splash();
+                    checksplash = 1;
+                } 
             }
         }
         if (collision == 0){
@@ -789,6 +1268,7 @@
                 bait1.position.x = 0;
                 bait1.position.z = 0;
                 kabur = 0;
+                checksplash = 0;
             }
         }
         if (collision2 == 0){
@@ -804,6 +1284,7 @@
                 bait1.position.x = 0;
                 bait1.position.z = 0;
                 kabur2 = 0;
+                checksplash = 0;
             }
         }
         if (collision3 == 0){
@@ -819,6 +1300,39 @@
                 bait1.position.x = 0;
                 bait1.position.z = 0;
                 kabur3 = 0;
+                checksplash = 0;
+            }
+        }
+        if (collision4 == 0){
+            fish4.position.add(newDir4);
+        }
+        if (collision4 == 1){
+            kabur4++;
+            if (kabur4 >= 100){
+                collision4 = 0;
+                scene.remove(bait2);
+                scene.add(bait1);
+                cast = 0;
+                bait1.position.x = 0;
+                bait1.position.z = 0;
+                kabur4 = 0;
+                checksplash = 0;
+            }
+        }
+        if (collision5 == 0){
+            fish5.position.add(newDir5);
+        }
+        if (collision5 == 1){
+            kabur5++;
+            if (kabur5 >= 100){
+                collision5 = 0;
+                scene.remove(bait2);
+                scene.add(bait1);
+                cast = 0;
+                bait1.position.x = 0;
+                bait1.position.z = 0;
+                kabur5 = 0;
+                checksplash = 0;
             }
         }
         lightHelper.update();
